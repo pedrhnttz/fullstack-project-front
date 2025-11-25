@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Header.css";
+import logo from "../../assets/logo.png";
 
 export default function Header() {
   const [user, setUser] = useState(null);
@@ -19,7 +20,10 @@ export default function Header() {
 
   return (
     <header className="header">
-      <div className="logo">Stock Management</div>
+      <div className="logo-container">
+        <img src={logo} alt="Logo" className="logo-img" />
+        StockY
+      </div>
 
       <nav className="nav">
         {!user ? (

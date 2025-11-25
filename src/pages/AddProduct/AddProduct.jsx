@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "../../components/Header/Header";
+import Sidebar from "../../components/Sidebar/Sidebar";
+
+import backIcon from "../../assets/back.png";
 import "./AddProduct.css";
 
 export default function AddProduct() {
@@ -9,10 +13,10 @@ export default function AddProduct() {
   const [price, setPrice] = useState("");
   const [qty, setQty] = useState("");
   const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const [sellerId, setSellerId] = useState(null);
 
-  // verificar login e buscar seller_id
   useEffect(() => {
     const email = localStorage.getItem("userEmail");
     const token = localStorage.getItem("token");
@@ -39,7 +43,15 @@ export default function AddProduct() {
       });
   }, [navigate]);
 
-  // envio do formulário
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -53,7 +65,7 @@ export default function AddProduct() {
     formData.append("price", price);
     formData.append("qty", qty);
     formData.append("seller_id", sellerId);
-    formData.append("image", imageFile); // AQUI envia o arquivo
+    formData.append("image", imageFile);
 
     try {
       const res = await fetch("https://fullstack-project-appp.onrender.com/products", {
@@ -71,36 +83,85 @@ export default function AddProduct() {
       alert("Produto cadastrado com sucesso!");
       navigate("/");
 
-    } catch (err) {
+    } catch {
       alert("Erro ao conectar com o servidor.");
     }
   };
 
   return (
-    <div className="addproduct-container">
-      <form className="addproduct-box" onSubmit={handleSubmit}>
-        <h2>Adicionar Produto</h2>
+    <>
+      <Header />
+      <Sidebar />
 
-        <label>Nome</label>
-        <input type="text" value={name} onChange={e => setName(e.target.value)} required />
+      <div className="addprod-container">
 
-        <label>Preço</label>
-        <input type="number" step="0.01" value={price} onChange={e => setPrice(e.target.value)} required />
+        {/* Botão voltar */}
+        <div className="addprod-top-actions">
+          <img
+            src={backIcon}
+            alt="Voltar"
+            className="addprod-icon-btn"
+            onClick={() => navigate(-1)}
+          />
+        </div>
 
-        <label>Quantidade</label>
-        <input type="number" value={qty} onChange={e => setQty(e.target.value)} required />
+        <div className="addprod-content">
 
-        <label>Imagem do Produto</label>
-        <input 
-          type="file" 
-          accept="image/*" 
-          onChange={(e) => setImageFile(e.target.files[0])}
-          required
-        />
+          {/* Preview da imagem */}
+          <div className="addprod-image-area">
+            {imagePreview ? (
+              <img src={imagePreview} alt="Preview" className="addprod-img" />
+            ) : (
+              <div className="addprod-empty-img">
+                Escolha uma imagem
+              </div>
+            )}
+          </div>
 
-        <button type="submit" className="add-btn">Cadastrar</button>
-        <a className="back-link" href="/">Voltar</a>
-      </form>
-    </div>
+          {/* Form */}
+          <form className="addprod-form" onSubmit={handleSubmit}>
+            <h1 className="addprod-title">Adicionar Produto</h1>
+
+            <label>Nome</label>
+            <input
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              required
+            />
+
+            <label>Preço</label>
+            <input
+              type="number"
+              step="0.01"
+              value={price}
+              onChange={e => setPrice(e.target.value)}
+              required
+            />
+
+            <label>Quantidade</label>
+            <input
+              type="number"
+              value={qty}
+              onChange={e => setQty(e.target.value)}
+              required
+            />
+
+            <label>Imagem do Produto</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              required
+            />
+
+            <button type="submit" className="addprod-btn">
+              Cadastrar Produto
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </>
   );
 }

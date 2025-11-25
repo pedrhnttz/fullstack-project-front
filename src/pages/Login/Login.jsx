@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import Header from "../../components/Header/Header";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -32,11 +33,9 @@ export default function Login() {
         return;
       }
 
-      // Salva token e usuário
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("userEmail", email);
 
-      // Alert e redirecionamento
       alert("Login efetuado com sucesso!");
       navigate("/");
 
@@ -46,32 +45,37 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container">
-      <form className="login-box" onSubmit={handleLogin}>
-        <h2>Login</h2>
+    <>
+      <Header />
 
-        <label>Email</label>
-        <input
-          type="email"
-          placeholder="Digite seu email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+      <div className="login-container">
+        <form className="login-box" onSubmit={handleLogin}>
+          <h2 className="login-title">Acessar Conta</h2>
 
-        <label>Senha</label>
-        <input
-          type="password"
-          placeholder="Digite sua senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          required
-        />
+          <label>Email</label>
+          <input
+            type="email"
+            placeholder="Digite seu email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <button type="submit" className="login-btn">Entrar</button>
+          <label>Senha</label>
+          <input
+            type="password"
+            placeholder="Digite sua senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            required
+          />
 
-        {error && <p className="error">{error}</p>}
-      </form>
-    </div>
+          <button type="submit" className="login-btn">Entrar</button>
+
+          {error && <p className="error">{error}</p>}
+        </form>
+      </div>
+    </>
   );
 }
+
