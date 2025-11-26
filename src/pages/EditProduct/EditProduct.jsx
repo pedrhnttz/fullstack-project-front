@@ -49,7 +49,7 @@ export default function EditProduct() {
 
     try {
       const res = await fetch(
-        `https://fullstack-project-appp.onrender.com/products/${product.name}`,
+        `https://fullstack-project-appp.onrender.com/products/${product.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
