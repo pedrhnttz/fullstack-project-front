@@ -6,6 +6,29 @@ import "./Sales.css";
 export default function Sales() {
   const [sales, setSales] = useState([]);
 
+  const deactivateStatus = (saleid) => {
+    try {
+      const res = fetch(
+        `https://fullstack-project-appp.onrender.com/sales/deactivate/${saleid}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+
+      const data = res.json();
+
+      if (!res.ok) {
+        alert(data.erro || "Erro ao desativar a venda.");
+        return;
+      }
+
+      alert("Venda desativada com sucesso!");
+    } catch (err) {
+      alert("Erro ao se conectar com o servidor.");
+    }
+  }
+
   useEffect(() => {
     async function loadSales() {
       try {
@@ -52,6 +75,7 @@ export default function Sales() {
                 <th>Nome do Produto</th>
                 <th>Quantidade</th>
                 <th>Preço na Venda</th>
+                <th></th>
               </tr>
             </thead>
 
@@ -61,6 +85,7 @@ export default function Sales() {
                   <td>{sale.product_name}</td>
                   <td>{sale.sold_qty}</td>
                   <td>R$ {sale.price_at_sale.toFixed(2)}</td>
+                  <td><button onClick={() => deactivateStatus(sale.id)}>Desativar</button></td>
                 </tr>
               ))}
             </tbody>
